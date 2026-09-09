@@ -1,5 +1,15 @@
  const express = require("express");
-  const { users } = require("../data/users.json");
+ const {
+  getAllUsers,
+  getSingleUserById,
+  deleteUser,
+  updateUserData,
+  createNewUser,
+} = require("../controllers/user-controller");
+ 
+ const { users } = require("../data/users.json");
+
+
  const router = express.Router();
 
   
@@ -12,34 +22,45 @@
  * Access: Public
  * Parameters: None
  */
-router.get("/", (req, res)=> { 
-  res.status(200).json({ 
-   success: true,
-   data: users,
-  });
-});
+// router.get("/", (req, res)=> { 
+//   res.status(200).json({ 
+//    success: true,
+//    data: users,
+//   });
+// });
+
+router.get("/", getAllUsers);
+
+//Routes:/
+//Method: POST
+//Description: Creating a new user
+//Acess: Public 
+//Parameters: None
 
 
 
-
-router.get("/:id", (req,res) => { 
-  const {id} = req.params;
-  //const id = req.params.id;
-  // 
+// router.get("/:id", (req,res) => { 
+//   const {id} = req.params;
+//   //const id = req.params.id;
+//   // 
   
-  const user = users.find((each)=>each.id === id)
-  if(!user){ 
-    return res.status(404).json({ 
-      success: false,
-      message: "User Doesn't Exist !!"
-    });
-  }
-  return res.status(200).json({    ///we can start with else as well
-    success: true,
-    message: "User Found",
-    data: user,
-  });
-});
+//   const user = users.find((each)=>each.id === id)
+//   if(!user){ 
+//     return res.status(404).json({ 
+//       success: false,
+//       message: "User Doesn't Exist !!"
+//     });
+//   }
+//   return res.status(200).json({    ///we can start with else as well
+//     success: true,
+//     message: "User Found",
+//     data: user,
+//   });
+// });
+
+
+router.get("/:id",getSingleUserById);
+
 /**
  * ROUTE: /
  * Method: POST
@@ -48,30 +69,37 @@ router.get("/:id", (req,res) => {
  * Parameters: none
  */
 
-router.post("/", (req,res)=>{ 
-  const{id, name, surname, email, subscriptionType, subscriptionDate} =req.body
+// router.post("/", (req,res)=>{ 
+//   const{id, name, surname, email, subscriptionType, subscriptionDate} =req.body
     
-  const user = users.find((each) =>each.id===id);
-  if(user){ 
-   return res.status(404).json({ 
-    success: false,
-    message: "user with the ID Exists"
-   });
-  }
-  users.push({ 
-    id,
-    name,
-    surname,
-    email,
-    subscriptionType,
-    subscriptionDate,
-  });
-  return res.status(201).json({ 
-    success: true,
-    message: "User added successfully",
-    data: users,
-  });
-});
+//   const user = users.find((each) =>each.id===id);
+//   if(user){ 
+//    return res.status(404).json({ 
+//     success: false,
+//     message: "user with the ID Exists"
+//    });
+//   }
+//   users.push({ 
+//     id,
+//     name,
+//     surname,
+//     email,
+//     subscriptionType,
+//     subscriptionDate,
+//   });
+//   return res.status(201).json({ 
+//     success: true,
+//     message: "User added successfully",
+//     data: users,
+//   });
+// });
+
+router.post("/", createNewUser);
+
+
+
+
+
 
 /**
  * ROUTE: /:id
@@ -80,32 +108,35 @@ router.post("/", (req,res)=>{
  * Access: Public
  * Parameters: ID
  */
-router.put("/:id", (req,res)=>{ 
-   const {id} = req.params;
-   const {data} = req.body;
+// router.put("/:id", (req,res)=>{ 
+//    const {id} = req.params;
+//    const {data} = req.body;
 
-  const user = users.find((each)=>each.id === id)
-  if(!user){ 
-    return res.status(404).json({ 
-      success: false,
-      message: "User Doesn't Exist !!"
-    });
-  }
-  const updateUserData = users.map((each)=>{ 
-    if(each.id===id){ 
-      return{
-        ...each,
-        ...data,
-      };
-    }
-    return each;
-  });
-  return res.status(200).json({ 
-    success: true,
-    message: "User Updated !!",
-    data: updateUserData
-  });
-});
+//   const user = users.find((each)=>each.id === id)
+//   if(!user){ 
+//     return res.status(404).json({ 
+//       success: false,
+//       message: "User Doesn't Exist !!"
+//     });
+//   }
+//   const updateUserData = users.map((each)=>{ 
+//     if(each.id===id){ 
+//       return{
+//         ...each,
+//         ...data,
+//       };
+//     }
+//     return each;
+//   });
+//   return res.status(200).json({ 
+//     success: true,
+//     message: "User Updated !!",
+//     data: updateUserData
+//   });
+// });
+
+
+router.put("/:id", updateUserData );
 
 /**
  * ROUTE: /:id
@@ -114,26 +145,30 @@ router.put("/:id", (req,res)=>{
  * Access: Public
  * Parameters: ID
  */
-router.delete("/:id", (req,res)=>{ 
-  const {id} = req.params;
 
-  const user = users.find((each)=>each.id === id)
-  if(!user){ 
-    return res.status(404).json({ 
-      success: false,
-      message: "User Doesn't Exist !!"
-    });
-  }
- const index = users.indexOf(user);
- users.splice(index, 1)
 
- return res.status(200).json({ 
-  sucess:true,
-  message: "Deleted user...",
-  data: users
- })
+// router.delete("/:id", (req,res)=>{ 
+//   const {id} = req.params;
 
-});
+//   const user = users.find((each)=>each.id === id)
+//   if(!user){ 
+//     return res.status(404).json({ 
+//       success: false,
+//       message: "User Doesn't Exist !!"
+//     });
+//   }
+//  const index = users.indexOf(user);
+//  users.splice(index, 1)
+
+//  return res.status(200).json({ 
+//   sucess:true,
+//   message: "Deleted user...",
+//   data: users
+//  })
+
+// });
+
+router.delete("/:id",deleteUser );
 
 /**
  * ROUTE: /users/subscription-details/:id

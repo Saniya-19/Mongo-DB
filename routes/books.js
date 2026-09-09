@@ -4,6 +4,8 @@ const {
   getAllBooks,
   getSingleBookById,
   getAllIssuedBooks,
+  addNewBook,
+  updateBookById,
   
 } = require("../controllers/book-controller");
   const {books} = require("../data/books.json");
@@ -46,7 +48,7 @@ router.get("/", getAllBooks );
 
 
 
-router.get("/issued",getAllIssuedBooks );
+router.get("/issued/by-user",getAllIssuedBooks);
 
 // router.get("/issued", (req, res)=>{ 
 //   const usersWithTheIssuedBook = users.filter((each)=>{   //...we are not use find here bcz we can use only one element by using find
@@ -117,30 +119,31 @@ router.get("/:id",getSingleBookById);
  */
 
 
-router.post("/", (req, res)=>{ 
-  const {data} = req.body;
+// router.post("/", (req, res)=>{ 
+//   const {data} = req.body;
 
-  if(!data) { 
-    return res.status(400).json({ 
-      success: false
-      ,
-      message: "No Data To Add A Book",
-    });
-  }
-  const book = books.find((each)=> each.id === data.id);
-  if(book){ 
-    return res.status(404).json({ 
-      success: false,
-      message: "Id Already Exists !!"
-    })
-  }
-  const allBooks = {...books, data};  //if we have same keys or operator it will execute recent one in spread operator
-  return res.status(201).json({ 
-    success: true,
-    message: "Added Book Succesfully",
-    data: allBooks,
-  })
-});
+//   if(!data) { 
+//     return res.status(400).json({ 
+//       success: false
+//       ,
+//       message: "No Data To Add A Book",
+//     });
+//   }
+//   const book = books.find((each)=> each.id === data.id);
+//   if(book){ 
+//     return res.status(404).json({ 
+//       success: false,
+//       message: "Id Already Exists !!"
+//     })
+//   }
+//   const allBooks = {...books, data};  //if we have same keys or operator it will execute recent one in spread operator
+//   return res.status(201).json({ 
+//     success: true,
+//     message: "Added Book Succesfully",
+//     data: allBooks,
+//   })
+// });
+router.post("/", addNewBook);
 
 /**
  * ROUTE: /:id
@@ -150,33 +153,34 @@ router.post("/", (req, res)=>{
  * Parameters: id
  * data: id, name, author, genre, price, publisher, 
  */
-router.put("/updateBook/:id", (req, res)=>{ 
-const {id} = req.params;   //writing params bcz our data is in url 
-
-const {data} = req.body;
-
-const book = books.find((each) => each.id === id)
-
-if(!book){ 
-  return res.status(400).json({ 
-    success: false,
-    message: "Book Not Found For This ID"
-  })
-}
-
-const updatedata = books.map((each)=>{ 
-  if(each.id == id){ 
-    return {...each, ...data}
-  }
-  return each;
-});
-return res.status(200).json({ 
-  success: true,
-  message: "Updated a Book By Their Id",
-  data: updatedata,
-});
-});
+router.put("/updateBook/:id", updateBookById);
 
 
+// router.put("/updateBook/:id", (req, res)=>{ 
+// const {id} = req.params;   //writing params bcz our data is in url 
+
+// const {data} = req.body;
+
+// const book = books.find((each) => each.id === id)
+
+// if(!book){ 
+//   return res.status(400).json({ 
+//     success: false,
+//     message: "Book Not Found For This ID"
+//   })
+// }
+
+// const updatedata = books.map((each)=>{ 
+//   if(each.id == id){ 
+//     return {...each, ...data}
+//   }
+//   return each;
+// });
+// return res.status(200).json({ 
+//   success: true,
+//   message: "Updated a Book By Their Id",
+//   data: updatedata,
+// });
+// });
 
   module.exports = router;
